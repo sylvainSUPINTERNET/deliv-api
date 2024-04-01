@@ -7,9 +7,11 @@ import { nanoid } from 'nanoid'
 export class CreateStoreHandler implements ICommandHandler<CreateStoreCommand> {
     constructor(private db: PrismaService) {}
 
+    readonly _descriptionbMaxLength: number = 100;
     readonly _limitStorePerUser: number = 3;
 
     readonly regexPhone = /^\+33[1-9]\d{8}$/;
+
 
     async execute(command: CreateStoreCommand ) {
 
@@ -34,6 +36,10 @@ export class CreateStoreHandler implements ICommandHandler<CreateStoreCommand> {
 
         if ( command.storeCreateDto.phoneNumber === "" || command.storeCreateDto.phoneNumber === null || this.regexPhone.test(command.storeCreateDto.phoneNumber) === false) {
             throw new Error('Phone number is required');
+        }
+
+        if ( command.storeCreateDto.description === "" || command.storeCreateDto.description === null || command.storeCreateDto.description.length > this._descriptionbMaxLength) {
+            throw new Error('Description is required and must length must be less than 100 characters');
         }
 
         const store = await this.db.store.create({

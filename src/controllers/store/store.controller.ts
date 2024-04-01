@@ -15,7 +15,7 @@ export class StoreController {
 
     @Post()
     async createStore(@Body() storeCreate: StoreCreateDto): Promise<any>  {
-      return await this.storeService.createStore(new StoreCreateDto(storeCreate.name, storeCreate.email, storeCreate.phoneNumber));
+      return await this.storeService.createStore(storeCreate);
     }
 
     @Delete("/products")
